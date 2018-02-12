@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-let port = "3001"
+let port = process.env.PORT
 let mongoUrl = process.env.MONGODB_URI
 
 if (process.env.NODE_ENV === 'test') {
