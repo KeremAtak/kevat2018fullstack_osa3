@@ -39,7 +39,11 @@ var maara = persons.map(function(v) {
 });
 
 personsRouter.get('/', async(request, response) => {
-  response.json(persons.map(Person.format))
+  Person
+    .find({})
+    .then(persons => {
+      response.json(persons.map(Person.format))
+    })
 })
 
 personsRouter.get('/:id', async(request, response) => {
