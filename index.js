@@ -6,33 +6,15 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
-const notesRouter = require('./controllers/notes')
-const usersRouter = require('./controllers/users')
-const loginRouter = require('./controllers/login')
 const personsRouter = require('./controllers/persons')
-const infoRouter = require('./controllers/infocontroller')
 const config = require('./utils/config')
 
-const url = 'mongodb://atak:salis@ds233238.mlab.com:33238/osa3kanta'
-mongoose.connect(url)
-mongoose.Promise = global.Promise
-
-const Person = mongoose.model('Person', {
-  name: String,
-  number: String,
-})
-
-app.get('/api/persons', async(request, response) => {
-  Person
-    .find({})
-    .then(persons => {
-      response.json(persons.map(Person.format))
-    })
-})
+mongoose.connect(config.mongoUrl)
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
+app.use(middleware.error)
 morgan.token('body', res => JSON.stringify(res.body))
 app.use(morgan(function (tokens, req, res) {
   return [
@@ -44,15 +26,17 @@ app.use(morgan(function (tokens, req, res) {
     tokens['response-time'](req, res), 'ms'
   ].join(' ')
 }))
-app.use(middleware.logger)
-app.use(express.static('build'))
-app.use('/api/login', loginRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/notes', notesRouter)
 app.use('/api/persons', personsRouter)
-app.use('/info', infoRouter)
 
-app.use(middleware.error)
+app.get('/', async (request, response) => {
+  const count = 0
+  const date = new Date();
+
+  response.writeHead(200, {"Content-Type":"text/html; charset=utf-8"});
+  response.write('puhelinluettelossa ' + count + ' henkilön tiedot'+'</br>');
+  response.write(' '+ date);
+  response.end();
+})
 
 const server = http.createServer(app)
 

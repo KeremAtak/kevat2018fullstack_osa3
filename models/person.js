@@ -1,18 +1,11 @@
 const mongoose = require('mongoose')
+const url = 'mongodb://atak:salis@ds233238.mlab.com:33238/osa3kanta'
+mongoose.connect(url)
+mongoose.Promise = global.Promise
 
-const personSchema = new mongoose.Schema({
+const Person = mongoose.model('Person', {
   name: String,
-  number: String
+  number: String,
 })
-
-personSchema.statics.format = (person) => {
-  return {
-    name: person.name,
-    number: person.number,
-    id: person.id
-  }
-}
-
-const Person = mongoose.model('Person', personSchema)
 
 module.exports = Person

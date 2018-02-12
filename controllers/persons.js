@@ -2,12 +2,6 @@ const personsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Person = require('../models/person')
 const index = require('../index')
-const mongoose = require('mongoose')
-
-const Person = mongoose.model('Person', {
-  name: String,
-  number: String,
-})
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
@@ -17,16 +11,46 @@ const getTokenFrom = (request) => {
   return null
 }
 
-var maara = persons.map(function(v) {
-  return Object.keys(v).length
-});
+const persons = [
+  {
+    "name": "Arto Hellas",
+    "number": "040-123456",
+    "id": 1
+  },
+  {
+    "name": "Martti Tienari",
+    "number": "040-123456",
+    "id": 2
+  },
+  {
+    "name": "Arto Järvinen",
+    "number": "040-123456",
+    "id": 3
+  },
+  {
+    "name": "Lea Kutvonen",
+    "number": "040-123456",
+    "id": 4
+  }
+]
+
+const formatPerson = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person.id
+  }
+}
 
 personsRouter.get('/', async(request, response) => {
   Person
-    .find({})
-    .then(persons => {
-      response.json(persons.map(Person.format))
-    })
+  .find({})
+  .then(newpersons => {
+    response.json(newpersons.map(formatPerson))
+  })
+  .catch(error => {
+    console.log(error)
+  })
 })
 
 personsRouter.get('/:id', async(request, response) => {
@@ -42,16 +66,18 @@ personsRouter.get('/:id', async(request, response) => {
 
 personsRouter.post('/', async(request, response) => {
   const body = request.body
-  const name = body.name
-  const number = body.number
-  const id = Math.floor(Math.random() * Math.floor(1000000))
-  const person = {"name" : name, "number": number, "id": id}
-
-  if (!person.name || !person.number || persons.find(person => person.name === name)) {
-    response.status(400).end()
-  } else {
-    response.json(person)
+  if (body.content === undefined) {
+    return response.status(400).json
   }
+  const person = new Person({
+    "name" : body.name, 
+    "number": body.number, 
+  })
+  person
+  .save()
+  .then(savedPerson => {
+    response.json(formatPerson(savedPerson))
+  })
 })
 
 
