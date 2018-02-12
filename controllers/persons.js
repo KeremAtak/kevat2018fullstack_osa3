@@ -2,6 +2,12 @@ const personsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Person = require('../models/person')
 const index = require('../index')
+const mongoose = require('mongoose')
+
+const Person = mongoose.model('Person', {
+  name: String,
+  number: String,
+})
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
@@ -10,29 +16,6 @@ const getTokenFrom = (request) => {
   }
   return null
 }
-
-const persons = [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
-  },
-  {
-    "name": "Martti Tienari",
-    "number": "040-123456",
-    "id": 2
-  },
-  {
-    "name": "Arto Järvinen",
-    "number": "040-123456",
-    "id": 3
-  },
-  {
-    "name": "Lea Kutvonen",
-    "number": "040-123456",
-    "id": 4
-  }
-]
 
 var maara = persons.map(function(v) {
   return Object.keys(v).length
