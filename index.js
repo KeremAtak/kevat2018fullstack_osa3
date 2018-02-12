@@ -31,7 +31,7 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ')
 }))
 app.use(middleware.logger)
-
+app.use(express.static('build'))
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/notes', notesRouter)
