@@ -22,7 +22,7 @@ const Person = mongoose.model('Person', {
   number: String,
 })
 
-app.get('/', async(request, response) => {
+app.get('/api/persons', async(request, response) => {
   Person
     .find({})
     .then(persons => {
