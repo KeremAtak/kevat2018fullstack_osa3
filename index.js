@@ -13,8 +13,22 @@ const personsRouter = require('./controllers/persons')
 const infoRouter = require('./controllers/infocontroller')
 const config = require('./utils/config')
 
-mongoose.connect(config.mongoUrl)
+const url = 'mongodb://atak:salis@ds233238.mlab.com:33238/osa3kanta'
+mongoose.connect(url)
 mongoose.Promise = global.Promise
+
+const Person = mongoose.model('Person', {
+  name: String,
+  number: String,
+})
+
+app.get('/', async(request, response) => {
+  Person
+    .find({})
+    .then(persons => {
+      response.json(persons.map(Person.format))
+    })
+})
 
 app.use(cors())
 app.use(bodyParser.json())
